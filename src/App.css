@@ -1,0 +1,98 @@
+.App {
+  text-align: center;
+}
+
+
+/* changes */
+[class*="sidebar-dark-"] {
+ 
+  background-color: #010911;
+}
+
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: calc(2rem + 1px);
+}
+
+label {
+  color: #5e6675;
+    font-size: 14px;
+    text-align: left;
+    padding-right: 10px;
+    line-height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 130px;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.card-primary:not(.card-outline)>.card-header {
+    background-color: #6c757d;
+}
+/* changes */
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.navlinkcustom
+{
+  display: block;
+  padding: 0.5rem 1rem;
+  color: white;
+}
+.navlinkcustom .navitemcustom
+{
+  display:contents;
+  margin-top: 0;
+  margin-bottom: 0rem;
+  cursor: context-menu;
+}
+@media(min-width: 992px)
+{
+  .sidebar-mini.sidebar-collapse .main-sidebar
+  {
+    margin-left: 0;
+    width: 0rem;
+  }
+}
+@media (min-width: 992px)
+{
+  .sidebar-mini.sidebar-collapse .content-wrapper, .sidebar-mini.sidebar-collapse .main-footer, .sidebar-mini.sidebar-collapse .main-header {
+    margin-left: 0rem!important;
+}
+
+}
+

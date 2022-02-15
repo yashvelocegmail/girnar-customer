@@ -79,9 +79,9 @@ function Menu() {
                                     padding: '0'
                                 }}>
                                     <li class="nav-item">
-                                        <Link to="inquiry" className="nav-link">
+                                        <Link to="enquiry" className="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
-                                            <p>Inquiry</p>
+                                            <p>Enquiry</p>
                                         </Link>
                                         <Link to="quotation" className="nav-link">
                                             <i class="far fa-circle nav-icon"></i>

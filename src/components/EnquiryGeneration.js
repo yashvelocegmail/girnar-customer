@@ -5,8 +5,15 @@ import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { Modal, Button } from "react-bootstrap";
+import Select from 'react-select';
 
 function EnquiryGeneration() {
+    const optionsArray = [
+        { key: "laser_cutting", label: "Laser Cutting" },
+        { key: "machining", label: "Machining" },
+        { key: "bending", label: "Bending" },
+        { key: "grinding", label: "Grinding" },
+      ];
     const [showModal, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -35,7 +42,7 @@ function EnquiryGeneration() {
             })
     }, []);
     const [inquiry, set_inquiry] = useState();
-    const [designstate, setdesignstate] = useState(false);
+    const [designstate, setdesignstate] = useState(0);
     const [material_type_option, set_material_type_option] = useState();
     const [material_thickness_option, set_material_thickness_option] = useState();
 
@@ -43,7 +50,7 @@ function EnquiryGeneration() {
     const [material_thickness, set_material_thickness] = useState();
     const [material_grade, set_material_grade] = useState();
     const [material_status, set_material_status] = useState();
-    const [type_of_process, set_type_of_process] = useState();
+    const [type_of_process, set_type_of_process] = useState([]);
     const [expected_delivery, set_expected_delivery] = useState();
     const [design_upload, set_design_upload] = useState();
     const [description, set_description] = useState();
@@ -52,7 +59,7 @@ function EnquiryGeneration() {
     // const [modal_customer, set_modal_customer] = useState();
     const [modal_material_type, set_modal_material_type] = useState();
     const [modal_material_thickness, set_modal_material_thickness] = useState();
-    const [modal_no_of_sheets, set_modal_no_of_sheets] = useState();
+    //const [modal_no_of_sheets, set_modal_no_of_sheets] = useState();
     const [modal_material_grade, set_modal_material_grade] = useState();
     const [modal_material_status, set_modal_material_status] = useState();
     const [modal_type_of_process, set_modal_type_of_process] = useState();
@@ -63,10 +70,13 @@ function EnquiryGeneration() {
     const ondesignclick = (e) => {
         console.log(e.target.value);
         if (e.target.value === "design") {
-            setdesignstate(true);
+            setdesignstate(1);
         }
-        else {
-            setdesignstate(false);
+        else if(e.target.value==="no_design"){
+            setdesignstate(2);
+        }
+        else{
+            setdesignstate(0);
         }
     }
      //Modal fields
@@ -88,8 +98,8 @@ function EnquiryGeneration() {
     const onModalMaterialStatusChange = (e) => {
         set_modal_material_status(e.target.value);
     }
-    const onModalTypeOfProcessChange = (e) => {
-        set_modal_type_of_process(e.target.value);
+    const onModalTypeOfProcessChange = (option) => {
+        set_modal_type_of_process(option);
     }
     const onModalExpectedDeliveryChange = (e) => {
         set_modal_expected_delivery(e.target.value);
@@ -109,7 +119,7 @@ function EnquiryGeneration() {
         formData.append('material_thickness', material_thickness);
         formData.append('material_grade', material_grade);
         formData.append('material_status', material_status);
-        formData.append('type_of_process', type_of_process);
+        formData.append('type_of_process', JSON.stringify(type_of_process));
         formData.append('expected_delivery', expected_delivery);
         formData.append('design_upload', design_upload);
         formData.append('description', description);
@@ -143,8 +153,8 @@ function EnquiryGeneration() {
     const onMaterialStatusChange = (e) => {
         set_material_status(e.target.value);
     }
-    const onTypeOfProcessChange = (e) => {
-        set_type_of_process(e.target.value);
+    const onTypeOfProcessChange = (option) => {
+        set_type_of_process(option);
     }
     const onExpectedDeliveryChange = (e) => {
         set_expected_delivery(e.target.value);
@@ -158,17 +168,18 @@ function EnquiryGeneration() {
     }
     const onEdit = (row) => {
         handleShow();
-        console.log(row.expected_delivery);
+        //console.log(row.type_of_process);
         set_modal_id(row.id);
         set_modal_material_type(row.material_type);
         set_modal_material_thickness(row.material_thickness);
-        set_modal_no_of_sheets(row.no_of_sheets);
+        //set_modal_no_of_sheets(row.no_of_sheets);
         set_modal_material_grade(row.material_grade);
         set_modal_material_status(row.material_status);
-        set_modal_type_of_process(row.type_of_process);
+        set_modal_type_of_process(JSON.parse(row.type_of_process.split(',')));
         set_modal_expected_delivery(row.expected_delivery);
         set_modal_design_upload(row.design_upload);
         set_modal_description(row.description);
+        console.log(modal_type_of_process);
     }
     const onModalFormSubmit = (e) => {
         e.preventDefault();
@@ -179,7 +190,7 @@ function EnquiryGeneration() {
         modalFormData.append('material_thickness', modal_material_thickness);
         modalFormData.append('material_grade', modal_material_grade);
         modalFormData.append('material_status', modal_material_status);
-        modalFormData.append('type_of_process', modal_type_of_process);
+        modalFormData.append('type_of_process', JSON.stringify(modal_type_of_process));
         modalFormData.append('expected_delivery', modal_expected_delivery);
         modalFormData.append('design_upload', modal_design_upload);
         modalFormData.append('description', modal_description);
@@ -217,7 +228,7 @@ function EnquiryGeneration() {
             });
     }
     const onNoDesignSubmit=(e)=>{
-
+e.preventDefault();
         axios.post(
             "http://localhost/girnar_backend/api/create_customer_inquiry.php", { customer: localStorage.getItem('customer_id'),design_upload:"no_design"})
             .then(response => {
@@ -228,9 +239,9 @@ function EnquiryGeneration() {
                         console.log(inquiry);
                     })
             })
-            .catch(error => { 
-                console.log(error);
-            });
+            // .catch(error => { 
+            //     console.log(error);
+            // });
     }
 
     const rows = inquiry === undefined ? [] : inquiry.data;
@@ -240,7 +251,7 @@ function EnquiryGeneration() {
             customer: 13,
             material_type: "Aluminium",
             material_thickness: "4mm",
-            no_of_sheets: "3",
+            //no_of_sheets: "3",
             material_grade: "A",
             material_status: "Without",
             type_of_process: "asd",
@@ -279,41 +290,41 @@ function EnquiryGeneration() {
         //         return params.row.material_thickness;
         //     }
         // },
-        {
-            field: 'no_of_sheets',
-            headerName: 'No Of Sheets',
-            width: 150
-        },
-        {
-            field: 'material_grade',
-            headerName: 'Material Grade',
-            width: 150
-        },
-        {
-            field: 'material_status',
-            headerName: 'Material Status',
-            width: 150
-        },
-        {
-            field: 'type_of_process',
-            headerName: 'Type Of Process',
-            width: 150
-        },
-        {
-            field: 'expected_delivery',
-            headerName: 'Expected Delivery',
-            width: 150
-        },
+        // {
+        //     field: 'no_of_sheets',
+        //     headerName: 'No Of Sheets',
+        //     width: 150
+        // },
+        // {
+        //     field: 'material_grade',
+        //     headerName: 'Material Grade',
+        //     width: 150
+        // },
+        // {
+        //     field: 'material_status',
+        //     headerName: 'Material Status',
+        //     width: 150
+        // },
+        // {
+        //     field: 'type_of_process',
+        //     headerName: 'Type Of Process',
+        //     width: 150
+        // },
+        // {
+        //     field: 'expected_delivery',
+        //     headerName: 'Expected Delivery',
+        //     width: 150
+        // },
         {
             field: 'design_upload',
             headerName: 'Design Upload',
             width: 200
         },
-        {
-            field: 'description',
-            headerName: 'Description',
-            width: 150
-        },
+        // {
+        //     field: 'description',
+        //     headerName: 'Description',
+        //     width: 150
+        // },
         {
             field: 'action',
             headerName: 'Action',
@@ -387,7 +398,9 @@ function EnquiryGeneration() {
                             </div>
                             <div className="field col-md-12">
                                 <label className="required">Type Of Process</label>
-                                <input defaultValue={modal_type_of_process} onChange={onModalTypeOfProcessChange} className="form-control mt-1" name="type_of_process" type="text" required />
+                                {/* <input defaultValue={modal_type_of_process} onChange={onModalTypeOfProcessChange} className="form-control mt-1" name="type_of_process" type="text" required /> */}
+                                {/* <input type="text" defaultValue={typeof modal_type_of_process} /> */}
+                                <DropdownMultiselect selected={modal_type_of_process}  handleOnChange={onModalTypeOfProcessChange} options={optionsArray} name="type_of_process" />
                             </div>
 
                             <div className="field col-md-12">
@@ -403,7 +416,7 @@ function EnquiryGeneration() {
                                 <label className="required">Description</label>
                                 <input defaultValue={modal_description} onChange={onModalDescriptionChange} name="description" className="form-control" placeholder="Enter Description" />
                             </div>
-                            <div className="field">
+                            <div className="field col-md-12">
                                 <button className="btn btn-primary">Save</button>
                             </div>
                         </div>
@@ -436,7 +449,7 @@ function EnquiryGeneration() {
                                                     <option value="no_design">Design Not Available</option>
                                                 </select>
                                             </div>
-                                            {designstate === false ? <button onClick={onNoDesignSubmit} type="submit" className="btn btn-secondary">Submit</button> :
+                                            {designstate === 2 ? <button onClick={onNoDesignSubmit} type="submit" className="btn btn-secondary">Submit</button> : designstate === 1 ?
                                                 <>
                                                     <div class="form-group">
                                                         <div class="custom-file">
@@ -455,11 +468,12 @@ function EnquiryGeneration() {
 
                                                     <div class="form-group">
                                                         <label>Type Of Process</label>
-                                                        <select onChange={onTypeOfProcessChange} name="type_of_process" className='custom-select'>
+                                                        {/* <select onChange={onTypeOfProcessChange} name="type_of_process" className='custom-select'>
                                                             <option>Select</option>
                                                             <option>Laser Cutting</option>
                                                             <option>Bending</option>
-                                                        </select>
+                                                        </select> */}
+                                                        <DropdownMultiselect handleOnChange ={onTypeOfProcessChange} options={optionsArray} name="type_of_process" />
                                                     </div>
 
                                                     <div className="form-group">
@@ -497,7 +511,7 @@ function EnquiryGeneration() {
                                                     <div className="card-footer">
                                                         <button type="submit" className="btn btn-primary">Submit</button>
                                                     </div>
-                                                </>
+                                                </>:<></>
                                             }
                                         </form>
                                     </div>
